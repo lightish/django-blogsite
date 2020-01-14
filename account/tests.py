@@ -18,7 +18,8 @@ class AccountTestCase(TestCase):
             password='1234'
         )
         self.MEDIA_preserved = settings.MEDIA_ROOT + '_preserved'
-        os.rename(settings.MEDIA_ROOT, self.MEDIA_preserved)
+        if os.path.exists(settings.MEDIA_ROOT):
+            os.rename(settings.MEDIA_ROOT, self.MEDIA_preserved)
         self.MEDIA_for_tests = os.path.join(settings.MEDIA_ROOT)
         self.avatars_location = os.path.join(self.MEDIA_for_tests, 'avatars')
         self.avatar1_path = get_testing_img_path('test_avatar.png')
@@ -33,7 +34,8 @@ class AccountTestCase(TestCase):
         except FileNotFoundError:
             pass
         finally:
-            os.rename(self.MEDIA_preserved, settings.MEDIA_ROOT)
+            if os.path.exists(self.MEDIA_preserved):
+                os.rename(self.MEDIA_preserved, settings.MEDIA_ROOT)
 
     def test_instance(self):
         user = Account.objects.get(username='normal_user')
