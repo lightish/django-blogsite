@@ -31,7 +31,7 @@ class MyAccountManager(BaseUserManager):
 
 
 def avatar_location(instance, *args, **kwargs):
-    return f'media/avatars/{instance.id}'
+    return f'avatars/{instance.id}'
 
 
 class Account(AbstractBaseUser, PermissionsMixin):

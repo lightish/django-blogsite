@@ -17,13 +17,13 @@ class AccountTestCase(TestCase):
             email='normal@mail.com',
             password='1234'
         )
-        self.MEDIA_for_tests = os.path.join(settings.BASE_DIR, 'media', 'media')
+        self.MEDIA_preserved = settings.MEDIA_ROOT + '_preserved'
+        os.rename(settings.MEDIA_ROOT, self.MEDIA_preserved)
+        self.MEDIA_for_tests = os.path.join(settings.MEDIA_ROOT)
         self.avatars_location = os.path.join(self.MEDIA_for_tests, 'avatars')
         self.avatar1_path = get_testing_img_path('test_avatar.png')
         self.avatar2_path = get_testing_img_path('test_avatar2.png')
 
-    # testing avatars brings a weird file tree like .../media/media/avatars/...
-    # plus auto destroying database after tests never gets rid of uploaded files
     def tear_down_media_file(self):
         shutil.rmtree(self.MEDIA_for_tests)
 
@@ -32,6 +32,8 @@ class AccountTestCase(TestCase):
             self.tear_down_media_file()
         except FileNotFoundError:
             pass
+        finally:
+            os.rename(self.MEDIA_preserved, settings.MEDIA_ROOT)
 
     def test_instance(self):
         user = Account.objects.get(username='normal_user')
