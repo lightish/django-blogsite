@@ -59,7 +59,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = ['email']
 
-    DEFAULT_AVATAR_URL = 'static/images/default_avatar.svg'
+    DEFAULT_AVATAR_URL = 'static/img/default_avatar.svg'
 
     def __str__(self):
         return self.username
