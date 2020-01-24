@@ -1,4 +1,5 @@
 from django.test import TestCase
+from utils.test import preserve_MEDIA, return_preserved_MEDIA
 from .models import Account
 from django.db import transaction
 from django.db.utils import IntegrityError
@@ -6,7 +7,6 @@ from django.conf import settings
 from django.core.files import File
 from PIL import Image, ImageChops
 import os
-import shutil
 
 
 class AccountTestCase(TestCase):
@@ -17,25 +17,14 @@ class AccountTestCase(TestCase):
             email='normal@mail.com',
             password='1234'
         )
-        self.MEDIA_preserved = settings.MEDIA_ROOT + '_preserved'
-        if os.path.exists(settings.MEDIA_ROOT):
-            os.rename(settings.MEDIA_ROOT, self.MEDIA_preserved)
-        self.MEDIA_for_tests = os.path.join(settings.MEDIA_ROOT)
+        self.MEDIA_preserved = preserve_MEDIA()
+        self.MEDIA_for_tests = settings.MEDIA_ROOT
         self.avatars_location = os.path.join(self.MEDIA_for_tests, 'avatars')
         self.avatar1_path = get_testing_img_path('test_avatar.png')
         self.avatar2_path = get_testing_img_path('test_avatar2.png')
 
-    def tear_down_media_file(self):
-        shutil.rmtree(self.MEDIA_for_tests)
-
     def tearDown(self) -> None:
-        try:
-            self.tear_down_media_file()
-        except FileNotFoundError:
-            pass
-        finally:
-            if os.path.exists(self.MEDIA_preserved):
-                os.rename(self.MEDIA_preserved, settings.MEDIA_ROOT)
+        return_preserved_MEDIA(self.MEDIA_for_tests, self.MEDIA_preserved)
 
     def test_instance(self):
         user = Account.objects.get(username='normal_user')
