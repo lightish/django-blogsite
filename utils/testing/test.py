@@ -18,3 +18,7 @@ def return_preserved_MEDIA(testing_MEDIA, preserved_MEDIA):
     finally:
         if os.path.exists(preserved_MEDIA):
             os.rename(preserved_MEDIA, settings.MEDIA_ROOT)
+
+
+def get_testing_img_path(img_name):
+    return os.path.join(settings.BASE_DIR, 'utils', 'testing', 'img', img_name)

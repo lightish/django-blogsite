@@ -86,10 +86,6 @@ class AccountTestCase(TestCase):
         assert count_files(self.avatars_location) == 2
 
 
-def get_testing_img_path(img_name):
-    return os.path.join(settings.BASE_DIR, 'account', 'testing', img_name)
-
-
 def assign_avatar(user, img_path, name='test_avatar'):
     with open(img_path, 'rb') as avatar:
         user.avatar.save(
