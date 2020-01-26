@@ -5,7 +5,7 @@ import os
 
 class OverwriteStorage(FileSystemStorage):
 
-    def get_available_name(self, name, max_length):
+    def get_available_name(self, name, max_length=None):
         """Returns a filename that's free on the target storage system, and
         available for new content to be written to.
 
@@ -27,3 +27,11 @@ class OverwriteStorage(FileSystemStorage):
         if self.exists(name):
             os.remove(os.path.join(settings.MEDIA_ROOT, name))
         return name
+
+
+def parse_storage_name(url):
+    return url[len(settings.MEDIA_URL):]
+
+
+def parse_filename(storage_name):
+    return storage_name[storage_name.rfind('/') + 1:]
