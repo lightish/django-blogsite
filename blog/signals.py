@@ -15,10 +15,14 @@ def delete_old_thumbnail_if_changed(sender, instance, **kwargs):
             instance._thumbnail_bac.delete(False)
 
 
-post_init.connect(backup_thumbnail, sender=Category, dispatch_uid=0)
-post_save.connect(delete_old_thumbnail_if_changed, sender=Category, dispatch_uid=0)
-post_init.connect(backup_thumbnail, sender=BlogPost, dispatch_uid=0)
-post_save.connect(delete_old_thumbnail_if_changed, sender=BlogPost, dispatch_uid=0)
+post_init.connect(backup_thumbnail,
+                  sender=Category, dispatch_uid=0)
+post_save.connect(delete_old_thumbnail_if_changed,
+                  sender=Category, dispatch_uid=0)
+post_init.connect(backup_thumbnail,
+                  sender=BlogPost, dispatch_uid=0)
+post_save.connect(delete_old_thumbnail_if_changed,
+                  sender=BlogPost, dispatch_uid=0)
 
 
 def delete_thumbnail(sender, instance, **kwargs):

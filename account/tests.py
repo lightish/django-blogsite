@@ -35,26 +35,37 @@ class AccountTestCase(TestCase):
     def test_requiered_fields(self):
         with self.assertRaises(ValueError):
             with transaction.atomic():
-                Account.objects.create_user(email=None, username='u1', password='123')
+                Account.objects.create_user(email=None,
+                                            username='u1',
+                                            password='123')
         with self.assertRaises(ValueError):
             with transaction.atomic():
-                Account.objects.create_user(email='e@m.com', username='u1', password=None)
+                Account.objects.create_user(email='e@m.com',
+                                            username='u1',
+                                            password=None)
         with self.assertRaises(IntegrityError):
             with transaction.atomic():
-                Account.objects.create_user(email='e@m.com', username=None, password='123')
+                Account.objects.create_user(email='e@m.com',
+                                            username=None,
+                                            password='123')
 
     def test_unique_fields(self):
         with self.assertRaises(IntegrityError, msg='emails must be unique'):
             with transaction.atomic():
-                Account.objects.create_user(email='normal@mail.com', username='u1', password='123')
+                Account.objects.create_user(email='normal@mail.com',
+                                            username='u1',
+                                            password='123')
 
         with self.assertRaises(IntegrityError, msg='usernames must be unique'):
             with transaction.atomic():
-                Account.objects.create_user(email='e2@m.com', username='normal_user', password='123')
+                Account.objects.create_user(email='e2@m.com',
+                                            username='normal_user',
+                                            password='123')
 
     def test_avatar_field(self):
-        # new account without a specified avatar shouldn't have an avatar stored in database,
-        # default avatar's data shouldn't be dublicated
+        # new account without a specified avatar shouldn't have
+        # an avatar stored in database, default avatar's data shouldn't be
+        # duplicated
         self.assertRaises(ValueError, lambda: self.normal_user.avatar.url)
 
         default_avatar_url = self.normal_user.avatar_url
@@ -82,7 +93,9 @@ class AccountTestCase(TestCase):
         assert count_files(self.avatars_location) == 0
 
         assign_avatar(self.normal_user, self.avatar1_path)
-        user2 = Account.objects.create(email='e@m.com', username='u2', password='123')
+        user2 = Account.objects.create(email='e@m.com',
+                                       username='u2',
+                                       password='123')
         assign_avatar(user2, self.avatar2_path)
 
         assert count_files(self.avatars_location) == 2

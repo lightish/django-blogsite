@@ -8,10 +8,10 @@ run:
 
 # MAKE SURE VIRTUAL_ENV_PATH is set up correctly
 # make sure you run it inside your virtual environment
-reset-migr: clear-migrations clear-media migrate
+resetm: purge-migrations clear-media migrate
 
 
-clear-migrations:
+purge-migrations:
 	@echo 'Cleaning up...'
 	find . -path ./venv -prune -o -wholename '*/migrations/*' -not -wholename '*/migrations/__init__.py' -exec rm -f {} \;
 	rm -f db.sqlite3

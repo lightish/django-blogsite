@@ -5,7 +5,8 @@ from .models import Account
 
 @admin.register(Account)
 class AccountAdmin(UserAdmin):
-    list_display = ('username', 'email', 'date_joined', 'last_login', 'is_admin', 'is_active', 'is_staff', 'about')
+    list_display = ('username', 'email', 'date_joined', 'last_login',
+                    'is_admin', 'is_active', 'is_staff', 'about')
     search_fields = ('username', 'email', 'about')
     readonly_fields = ('date_joined', 'last_login')
 
@@ -13,4 +14,5 @@ class AccountAdmin(UserAdmin):
     filter_vertical = ()
     fieldsets = ()
 
-    sortable_by = ('username', 'email', 'date_joined', 'last_login', 'is_admin', 'is_active', 'is_staff')
+    sortable_by = ('username', 'email', 'date_joined', 'last_login',
+                   'is_admin', 'is_active', 'is_staff')

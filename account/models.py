@@ -39,7 +39,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
         max_length=40,
         unique=True,
         validators=[UnicodeUsernameValidator()],
-        help_text=gettext_lazy('Required. 40 characters or fewer. Letters, digits and @/./+/-/_ only.')
+        help_text=gettext_lazy('Required. 40 characters or fewer. Letters, '
+                               'digits and @/./+/-/_ only.')
     )
     avatar = models.ImageField(upload_to=avatar_location,
                                storage=OverwriteStorage(),
@@ -47,8 +48,10 @@ class Account(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=254, unique=True)
     about = models.TextField(max_length=300, blank=True, null=True)
 
-    date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
-    last_login = models.DateTimeField(verbose_name='last login', auto_now=True)
+    date_joined = models.DateTimeField(verbose_name='date joined',
+                                       auto_now_add=True)
+    last_login = models.DateTimeField(verbose_name='last login',
+                                      auto_now=True)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

@@ -23,7 +23,8 @@ class OverwriteStorage(FileSystemStorage):
             except: pass
             super(MyModelName, self).save(*args, **kwargs)
         """
-        # If the filename already exists, remove it as if it was a true file system
+        # If the filename already exists, remove it
+        # as if it was a true file system
         if self.exists(name):
             os.remove(os.path.join(settings.MEDIA_ROOT, name))
         return name

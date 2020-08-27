@@ -14,7 +14,9 @@ class MovableImageFieldFile(ImageFieldFile):
 
         filename = parse_filename(storage_name)
         new_name = self.field.generate_filename(self.instance, filename)
-        self.name = self.storage.get_available_name(new_name, max_length=self.field.max_length)
+        self.name = self.storage.get_available_name(
+            new_name, max_length=self.field.max_length
+        )
         new_path = self.storage.path(self.name)
         new_path_dir = os.path.dirname(new_path)
         if not os.path.exists(new_path_dir):
