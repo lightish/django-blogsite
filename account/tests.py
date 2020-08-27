@@ -1,11 +1,13 @@
 from django.test import TestCase
-from utils.testing.test import preserve_MEDIA, return_preserved_MEDIA, get_testing_img_path
+from utils.testing.test import (
+    preserve_MEDIA, return_preserved_MEDIA, get_testing_img_path
+)
 from .models import Account
 from django.db import transaction
 from django.db.utils import IntegrityError
 from django.conf import settings
 from django.core.files import File
-from PIL import Image, ImageChops
+from PIL import Image
 import os
 
 
@@ -96,7 +98,7 @@ def assign_avatar(user, img_path, name='test_avatar'):
 
 
 def images_are_equal(im1, im2):
-    return ImageChops.difference(im1, im2).getbbox() is None
+    return tuple(im1.getdata()) == tuple(im2.getdata())
 
 
 def count_files(path):
