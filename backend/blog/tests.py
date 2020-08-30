@@ -7,7 +7,7 @@ from django.db.models.deletion import ProtectedError
 from django.conf import settings
 from mixer.backend.django import mixer
 from utils.testing.test import get_testing_img_path
-from . import models
+from blog import models
 import tempfile
 import os
 

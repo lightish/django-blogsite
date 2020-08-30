@@ -2,7 +2,7 @@ from django.test import TestCase
 from utils.testing.test import (
     preserve_MEDIA, return_preserved_MEDIA, get_testing_img_path
 )
-from .models import Account
+from account.models import Account
 from django.db import transaction
 from django.db.utils import IntegrityError
 from django.conf import settings
