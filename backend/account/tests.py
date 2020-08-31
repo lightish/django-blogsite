@@ -32,7 +32,7 @@ class AccountTestCase(TestCase):
         user = Account.objects.get(username='normal_user')
         assert user == self.normal_user
 
-    def test_requiered_fields(self):
+    def test_required_fields(self):
         with self.assertRaises(ValueError):
             with transaction.atomic():
                 Account.objects.create_user(email=None,
@@ -43,11 +43,13 @@ class AccountTestCase(TestCase):
                 Account.objects.create_user(email='e@m.com',
                                             username='u1',
                                             password=None)
-        with self.assertRaises(IntegrityError):
+        try:
             with transaction.atomic():
                 Account.objects.create_user(email='e@m.com',
                                             username=None,
                                             password='123')
+        except ValueError:
+            self.fail("username shouldn't be required")
 
     def test_unique_fields(self):
         with self.assertRaises(IntegrityError, msg='emails must be unique'):

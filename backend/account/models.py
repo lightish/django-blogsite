@@ -7,7 +7,7 @@ from utils.storage import OverwriteStorage
 
 
 class MyAccountManager(BaseUserManager):
-    def create_user(self, email, username, password):
+    def create_user(self, email, password, username=None):
         if not email:
             raise ValueError('email must be provided')
         if not password:
@@ -40,7 +40,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
         unique=True,
         validators=[UnicodeUsernameValidator()],
         help_text=gettext_lazy('Required. 40 characters or fewer. Letters, '
-                               'digits and @/./+/-/_ only.')
+                               'digits and @/./+/-/_ only.'),
+        null=True, blank=True
     )
     avatar = models.ImageField(upload_to=avatar_location,
                                storage=OverwriteStorage(),
