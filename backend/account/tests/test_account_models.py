@@ -43,25 +43,17 @@ class AccountTestCase(TestCase):
                 Account.objects.create_user(email='e@m.com',
                                             username='u1',
                                             password=None)
-        try:
+        with self.assertRaises(ValueError):
             with transaction.atomic():
                 Account.objects.create_user(email='e@m.com',
                                             username=None,
                                             password='123')
-        except ValueError:
-            self.fail("username shouldn't be required")
 
     def test_unique_fields(self):
         with self.assertRaises(IntegrityError, msg='emails must be unique'):
             with transaction.atomic():
                 Account.objects.create_user(email='normal@mail.com',
                                             username='u1',
-                                            password='123')
-
-        with self.assertRaises(IntegrityError, msg='usernames must be unique'):
-            with transaction.atomic():
-                Account.objects.create_user(email='e2@m.com',
-                                            username='normal_user',
                                             password='123')
 
     def test_avatar_field(self):

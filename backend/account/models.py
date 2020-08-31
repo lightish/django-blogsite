@@ -1,15 +1,15 @@
-from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
-from django.utils.translation import gettext_lazy
 from django.db import models
 from utils.storage import OverwriteStorage
 
 
 class MyAccountManager(BaseUserManager):
-    def create_user(self, email, password, username=None):
+    def create_user(self, email, username, password):
         if not email:
             raise ValueError('email must be provided')
+        if not username:
+            raise ValueError('username must be provided')
         if not password:
             raise ValueError('password must be provided')
 
@@ -35,18 +35,11 @@ def avatar_location(instance, *args, **kwargs):
 
 
 class Account(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(
-        max_length=40,
-        unique=True,
-        validators=[UnicodeUsernameValidator()],
-        help_text=gettext_lazy('Required. 40 characters or fewer. Letters, '
-                               'digits and @/./+/-/_ only.'),
-        null=True, blank=True
-    )
+    email = models.EmailField(max_length=255, unique=True)
+    username = models.CharField(max_length=200)
     avatar = models.ImageField(upload_to=avatar_location,
                                storage=OverwriteStorage(),
                                null=True, blank=True)
-    email = models.EmailField(max_length=254, unique=True)
     about = models.TextField(max_length=300, blank=True, null=True)
 
     date_joined = models.DateTimeField(verbose_name='date joined',
@@ -59,9 +52,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     objects = MyAccountManager()
 
-    USERNAME_FIELD = 'username'
-    EMAIL_FIELD = 'email'
-    REQUIRED_FIELDS = ['email']
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
 
     DEFAULT_AVATAR_URL = 'static/img/default_avatar.svg'
 
@@ -70,7 +62,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     @property
     def avatar_url(self):
-        try:
+        if self.avatar.storage.exists(avatar_location(self)):
             return self.avatar.url
-        except ValueError:
+        else:
             return self.DEFAULT_AVATAR_URL
