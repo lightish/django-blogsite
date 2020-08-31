@@ -6,6 +6,7 @@ from rest_framework import status
 
 
 CREATE_ACCOUNT_URL = reverse('account:create')
+CREATE_TOKEN_URL = reverse('account:token')
 
 
 def create_account(**params):
@@ -49,3 +50,20 @@ class PublicAccountApiTestCase(TestCase):
         account_exists = get_user_model().objects.filter(
             email=payload['email']).exists()
         self.assertFalse(account_exists)
+
+    def test_create_token_with_valid_credentials(self):
+        create_account(**self.valid_payload)
+        resp = self.client.post(CREATE_TOKEN_URL, self.valid_payload)
+
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertIn('token', resp.data)
+
+    def test_create_token_with_invalid_credentials(self):
+        invalid_payload = self.valid_payload.copy()
+        invalid_payload['password'] = 'wrong-password'
+
+        create_account(**self.valid_payload)
+        resp = self.client.post(CREATE_TOKEN_URL, invalid_payload)
+
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertNotIn('token', resp.data)
