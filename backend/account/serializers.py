@@ -16,6 +16,16 @@ class AccountSerializer(serializers.ModelSerializer):
     def create(self, validated_data) -> Account:
         return get_user_model().objects.create_user(**validated_data)
 
+    def update(self, instance, validated_data):
+        password = validated_data.pop('password', None)
+        account = super().update(instance, validated_data)
+
+        if password:
+            account.set_password(password)
+            account.save()
+
+        return account
+
 
 class AuthTokenSerializer(serializers.Serializer):
     email = serializers.CharField()

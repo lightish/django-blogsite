@@ -1,11 +1,12 @@
 from django.urls import path
 
-from account.views import CreateAccountView, CreateTokenView
+from account import views
 
 
 app_name = 'account'
 
 urlpatterns = [
-    path('create/', CreateAccountView.as_view(), name='create'),
-    path('token/', CreateTokenView.as_view(), name='token')
+    path('create/', views.CreateAccountView.as_view(), name='create'),
+    path('token/', views.CreateTokenView.as_view(), name='token'),
+    path('me/', views.ManageAccountView.as_view(), name='me')
 ]
