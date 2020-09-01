@@ -16,7 +16,7 @@ import os
 class BlogPostTestCase(TestCase):
 
     def setUp(self):
-        self.category = mixer.blend(models.Category)
+        self.category = mixer.blend(models.Category, thumbnail=mixer.RANDOM)
         self.post = mixer.blend(models.BlogPost,
                                 category=self.category,
                                 slug=mixer.SKIP,
@@ -86,7 +86,7 @@ class IllustrationTestCase(TestCase):
 class CleanupTestCase(TestCase):
 
     def test_category_cleanup(self):
-        category = mixer.blend(models.Category)
+        category = mixer.blend(models.Category, thumbnail=mixer.RANDOM)
         thumbnail = category.thumbnail.name
         self.assertMediaCleanedUp(category, thumbnail)
 

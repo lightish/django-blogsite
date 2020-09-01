@@ -1,8 +1,7 @@
 from django.db.models.signals import post_save, post_delete, post_init, pre_save
 from django.dispatch import receiver
-from django.utils.text import slugify
 
-from .models import Category, BlogPost, Illustration
+from blog.models import Category, BlogPost, Illustration
 
 
 def backup_thumbnail(sender, instance, **kwargs):
@@ -34,9 +33,9 @@ post_delete.connect(delete_thumbnail, sender=BlogPost, dispatch_uid=0)
 
 
 @receiver(pre_save, sender=BlogPost)
-def attach_slug(sender, instance, **kwargs):
-    # TODO (?) tag instance with it's old slug
-    instance.slug = slugify(instance.title)
+def attach_default_category(sender, instance, **kwargs):
+    if not instance.category_id:
+        instance.category = Category.objects.get_or_create(name='General')[0]
 
 
 @receiver(post_delete, sender=Illustration)

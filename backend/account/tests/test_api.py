@@ -96,9 +96,11 @@ class PrivateAccountApiTests(TestCase):
         })
 
     def test_update_self_profile_update(self):
-        payload = {'email': 'new@mail.com',
-                   'username': 'new name',
-                   'password': 'new pass'}
+        payload = {
+            'email': 'new@mail.com',
+            'username': 'new name',
+            'password': 'new pass'
+        }
 
         resp = self.client.patch(ME_URL, payload)
         self.user.refresh_from_db()

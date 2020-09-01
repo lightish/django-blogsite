@@ -6,6 +6,9 @@ from django.core.exceptions import SuspiciousFileOperation
 from utils.fields import MovableImageField
 
 
+DEFAULT_THUMBNAIL_URL = 'static/img/default_thumbnail.svg'
+
+
 def upload_illustration(instance, filename):
     return f'blog/posts/{instance.post.id}/{filename}'
 
@@ -16,38 +19,24 @@ def upload_thumbnail(instance, filename):
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
-    thumbnail = models.ImageField(upload_to='blog/cat/')
+    thumbnail = models.ImageField(upload_to='blog/cat/',
+                                  default=DEFAULT_THUMBNAIL_URL,
+                                  blank=True)
 
 
 class BlogPost(models.Model):
-
-    class Status(models.IntegerChoices):
-        DRAFT = 0               # author is still editing the post
-        AWAITING_APPROVAL = 1   # post is waiting editor's approval
-        PUBLISHED = 2           # the only valid status for posts to be shown
-        # to normal users
-        DISABLED = 3            # staff or editors disabled post to address
-        # some issue
-
     title = models.CharField(max_length=200)
-    content = models.TextField(max_length=50_000)
+    content = models.TextField(max_length=10_000)
     category = models.ForeignKey(Category,
                                  on_delete=models.PROTECT,
-                                 related_name='posts')
+                                 related_name='posts',
+                                 blank=True)
     thumbnail = models.ImageField(upload_to=upload_thumbnail,
                                   null=True, blank=True)
-    slug = models.SlugField(blank=True, unique=True)
     created_on = models.DateField(auto_now_add=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL,
                                related_name='posts_made',
                                on_delete=models.CASCADE)
-    editor = models.ForeignKey(settings.AUTH_USER_MODEL,
-                               related_name='posts_edited',
-                               on_delete=models.SET_NULL,
-                               limit_choices_to={'is_staff': True},
-                               null=True, blank=True)
-    status = models.IntegerField(choices=Status.choices)
-    view_count = models.IntegerField(default=0, blank=True)
 
     class Meta:
         ordering = ('-created_on',)
@@ -60,7 +49,10 @@ class BlogPost(models.Model):
         try:
             return self.thumbnail.url
         except ValueError:
-            return self.category.thumbnail.url
+            try:
+                return self.category.thumbnail.url
+            except ValueError:
+                return self.DEFAULT_THUMBNAIL_URL
 
 
 class Illustration(models.Model):
