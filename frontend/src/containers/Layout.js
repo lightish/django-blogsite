@@ -1,5 +1,6 @@
 import React from "react";
 import { Layout, Menu } from 'antd';
+import { withRouter } from 'react-router-dom';
 
 const { Header, Content, Footer } = Layout;
 
@@ -27,4 +28,4 @@ const BaseLayout = (props) => {
   );
 }
 
-export default BaseLayout
+export default withRouter(BaseLayout)
