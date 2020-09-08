@@ -1,9 +1,12 @@
 import React from 'react';
+import 'antd/dist/antd.css';
 
-import './App.css';
+import BaseLayout from "./containers/Layout";
 
 const App = () => (
-    <div></div>
+  <BaseLayout>
+    <div>Content</div>
+  </BaseLayout>
 )
 
 export default App;
