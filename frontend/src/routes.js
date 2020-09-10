@@ -1,10 +1,15 @@
 import React from 'react'
-import { Route } from 'react-router-dom'
+import { Switch, Route } from 'react-router-dom'
 
-const mainPage = _ => <div>Content</div>
+import PostList from "./containers/PostList";
 
-const BaseRoutes = (props) => (
-  <Route exact path="/" component={mainPage} />
-)
+const BaseRoutes = () => (
+  <div>
+    <Switch>
+      <Route exact path="/" component={PostList} />
+      <Route exact path="/posts/page=:page" component={PostList} />
+    </Switch>
+  </div>
+);
 
-export default BaseRoutes
+export default BaseRoutes;
