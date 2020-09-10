@@ -20,11 +20,17 @@ def upload_thumbnail(instance, filename):
 class Category(models.Model):
     name = models.CharField(max_length=50)
     thumbnail = models.ImageField(upload_to='blog/cat/',
-                                  default=DEFAULT_THUMBNAIL_URL,
                                   blank=True)
 
     class Meta:
         verbose_name_plural = 'Categories'
+
+    @property
+    def thumbnail_url(self):
+        try:
+            return self.thumbnail.url
+        except ValueError:
+            return DEFAULT_THUMBNAIL_URL
 
 
 class BlogPost(models.Model):
@@ -46,16 +52,6 @@ class BlogPost(models.Model):
 
     def __str__(self):
         return self.title
-
-    @property
-    def thumbnail_url(self):
-        try:
-            return self.thumbnail.url
-        except ValueError:
-            try:
-                return self.category.thumbnail.url
-            except ValueError:
-                return self.DEFAULT_THUMBNAIL_URL
 
 
 class Illustration(models.Model):
