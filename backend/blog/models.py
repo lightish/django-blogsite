@@ -23,6 +23,9 @@ class Category(models.Model):
                                   default=DEFAULT_THUMBNAIL_URL,
                                   blank=True)
 
+    class Meta:
+        verbose_name_plural = 'Categories'
+
 
 class BlogPost(models.Model):
     title = models.CharField(max_length=200)
