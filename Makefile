@@ -2,7 +2,7 @@ run:
 	python backend/manage.py runserver
 
 
-resetm: purge-migrations clear-media migrate
+new-db: purge-migrations clear-media migrate unsec-admin
 
 
 purge-migrations:
